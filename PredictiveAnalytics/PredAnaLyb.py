@@ -184,7 +184,8 @@ def predict_analyze_qual_matches(data: dict, schedule: list, print_=False):
 
 def print_standings(standings: dict):
     for team in standings.keys():
-        standings[team]["TBP"] = sum(standings[team]["TBP"]) / len(standings[team]["TBP"])-1 #  TODO: remove lowest TBP
-        standings[team]["RP"] = sum(standings[team]["RP"]) / len(standings[team]["RP"])-1
+        standings[team]["TBP"].remove(min(standings[team]["TBP"]))
+        standings[team]["TBP"] = round(sum(standings[team]["TBP"]) / len(standings[team]["TBP"]), 2)
+        standings[team]["RP"] = round(sum(standings[team]["RP"]) / len(standings[team]["RP"]), 2)
 
     print(standings)
