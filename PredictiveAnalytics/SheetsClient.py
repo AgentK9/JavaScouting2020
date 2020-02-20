@@ -12,7 +12,7 @@ SPREADSHEET_ID = '16A_rdYkhWwQFlRJMx18Gy95HOMu1FNMhuRt_8OHnD00'
 
 
 # initializes the api client. Required for any operations on the sheet
-def get_service():
+def get_service(sheet_id: str):
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
