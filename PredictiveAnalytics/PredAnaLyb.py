@@ -1,4 +1,3 @@
-
 data_structure = {  # Dict of Teams (key: number, data: data)
     "0000": {  # Team
         "0": {  # Match/Pre-Match Scouting
@@ -25,6 +24,12 @@ data_structure = {  # Dict of Teams (key: number, data: data)
 
         },
         "1": {  # alternate (simpler) format
+            "alliance_color": "red",
+            "auto_score": 0,
+            "tele-op_score": 0,
+            "end_game_score": 0
+        },
+        "2": {  # alternate (simplest) format
             "alliance_color": "red",  # (red/blue)
             "score": 0
         }
