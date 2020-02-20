@@ -226,10 +226,14 @@ def predict_analyze_qual_matches(data: dict, schedule: list, print_=False):
     return standings
 
 
-def print_standings(standings: dict):
+def print_qual_standings(standings: dict):
     for team in standings.keys():
         standings[team]["TBP"].remove(min(standings[team]["TBP"]))
         standings[team]["TBP"] = round(sum(standings[team]["TBP"]) / len(standings[team]["TBP"]), 2)
         standings[team]["RP"] = round(sum(standings[team]["RP"]) / len(standings[team]["RP"]), 2)
 
-    print(standings)
+    tbp_sorted = sorted(standings.items(), key=lambda item: item[1]["TBP"], reverse=True)
+    rp_sorted = {k: v for k, v in sorted(tbp_sorted, key=lambda item: item[1]["RP"], reverse=True)}
+
+    for (num, team) in enumerate(rp_sorted.keys()):
+        print(num + 1, team, rp_sorted[team]["RP"], rp_sorted[team]["TBP"])
