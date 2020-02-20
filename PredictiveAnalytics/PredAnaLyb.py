@@ -71,7 +71,7 @@ def get_score_from_complex(match: dict):
 
 
 def get_score(match: dict):
-    return match["score"] if "score" in match.keys() else get_score_from_complex(match=match)
+    return match["score"] if "score" in match.keys() else sum(match[key] if "score" in key else 0 for key in match.keys()) if "auto_score" in match.keys() else get_score_from_complex(match=match)
 
 
 def get_avg_team_score(team: dict):
@@ -97,8 +97,8 @@ def get_match_score(schedule: list, match_num: int, data: dict):
         return None, None
 
     # score totals (they should be the same, averaged just so it'll work and be somewhat accurate
-    red_score = (get_score(red_a_match) + get_score(red_b_match))/2
-    blue_score = (get_score(blue_a_match) + get_score(blue_b_match))/2
+    red_score = (get_score(red_a_match) + get_score(red_b_match))
+    blue_score = (get_score(blue_a_match) + get_score(blue_b_match))
 
     return red_score, blue_score
 
