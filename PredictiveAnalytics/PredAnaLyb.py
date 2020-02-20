@@ -5,9 +5,9 @@ data_structure = {  # Dict of Teams (key: number, data: data)
             "autonomous": {
                 "num_skystones_delivered": 0,
                 "num_stones_delivered": 0,
-                "num_stones_placed":0,
+                "num_stones_placed": 0,
                 "moved_foundation": False,
-                "parked": 0
+                "parked": False
             },
             "tele-op": {
                 "num_stones_delivered": 0,
@@ -15,11 +15,10 @@ data_structure = {  # Dict of Teams (key: number, data: data)
                 "tallest_skyscraper_levels": 0
             },
             "end_game": {
-                "num_caps": 0,
-                "num_cap_levels_1": 0,
-                "num_cap_levels_2": 0,
+                "capped": False,
+                "num_cap_levels": 0,
                 "moved_foundation": False,
-                "parked": 0
+                "parked": False
             }
 
         },
