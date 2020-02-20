@@ -2,7 +2,7 @@
 JavaScouting, updated for the FTC 2020 SkyStone game! As always, featuring predictive analytics! \
 Please observe gracious professionalism and credit me according to the license. 
 I would also love to know if your team is using my system, so I can help you with any and all bugs. 
-Please reach out to me through GitHub, or contact us via our team website [here](https://javascouts.com).  \
+Please reach out to me through GitHub, or contact us via our team website [here](http://www.javascouts.com).  \
 Thank you!
 ## About this system:
 This is a python-driven scouting system. Data is entered through Google Forms, which goes into a Google Sheet. 
