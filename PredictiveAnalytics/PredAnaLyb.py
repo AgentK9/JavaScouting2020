@@ -199,7 +199,7 @@ def sim_match(schedule: list, match_num: int, data: dict):
     return winner, tbp
 
 
-def predict_analyze_qual_matches(data: dict, schedule: list, print_=False):
+def predict_analyze_qual_matches(data: dict, schedule: list):
     standings, skipped = get_current_standings(schedule=schedule, data=data)
 
     for match_num in skipped:
@@ -221,12 +221,10 @@ def predict_analyze_qual_matches(data: dict, schedule: list, print_=False):
             standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(1)
             standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(1)
 
-    print_standings(standings) if print_ else None
-
     return standings
 
 
-def print_qual_standings(standings: dict):
+def format_qual_standings(standings: dict, print_: bool = False):
     for team in standings.keys():
         standings[team]["TBP"].remove(min(standings[team]["TBP"]))
         standings[team]["TBP"] = round(sum(standings[team]["TBP"]) / len(standings[team]["TBP"]), 2)
@@ -235,5 +233,8 @@ def print_qual_standings(standings: dict):
     tbp_sorted = sorted(standings.items(), key=lambda item: item[1]["TBP"], reverse=True)
     rp_sorted = {k: v for k, v in sorted(tbp_sorted, key=lambda item: item[1]["RP"], reverse=True)}
 
-    for (num, team) in enumerate(rp_sorted.keys()):
-        print(num + 1, team, rp_sorted[team]["RP"], rp_sorted[team]["TBP"])
+    if print_:
+        for (num, team) in enumerate(rp_sorted.keys()):
+            print(num + 1, team, rp_sorted[team]["RP"], rp_sorted[team]["TBP"])
+
+    return rp_sorted
