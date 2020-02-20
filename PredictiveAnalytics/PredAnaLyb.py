@@ -71,7 +71,12 @@ def get_score_from_complex(match: dict):
 
 
 def get_score(match: dict):
-    return match["score"] if "score" in match.keys() else sum(match[key] if "score" in key else 0 for key in match.keys()) if "auto_score" in match.keys() else get_score_from_complex(match=match)
+    if "score" in match.keys():
+        return match["score"], 1
+    elif "auto_score" in match.keys():
+        return sum(match[key] if "score" in key else 0 for key in match.keys()), 2
+    else:
+        return get_score_from_complex(match=match), 3
 
 
 def get_avg_team_score(team: dict):
@@ -95,10 +100,46 @@ def get_match_score(schedule: list, match_num: int, data: dict):
     except KeyError:
         # not enough data on this match
         return None, None
+    
+    # red score
+    red_score = 0
+    red_a_score, red_a_type = get_score(red_a_match)
+    red_b_score, red_b_type = get_score(red_b_match)
+    # if we have two alliance scores...
+    if (red_a_type == 2 or red_a_type == 3) and (red_b_type == 2 or red_b_type == 3):
+        # average the two alliance scores
+        red_score += (red_a_score + red_b_score)/2
+    # if we have two team scores...
+    elif red_a_type == 1 and red_b_type == 1:
+        # add the two scores together
+        red_score += red_a_score + red_b_score
+    # if we have one alliance and one team score...
+    elif (red_a_type == 2 or red_a_type == 3) and red_b_type == 1:
+        # use the alliance score
+        red_score += red_a_score
+    elif (red_b_type == 2 or red_b_type == 3) and red_a_type == 1:
+        # use the alliance score
+        red_score += red_b_score
 
-    # score totals (they should be the same, averaged just so it'll work and be somewhat accurate
-    red_score = (get_score(red_a_match) + get_score(red_b_match))
-    blue_score = (get_score(blue_a_match) + get_score(blue_b_match))
+    # blue score
+    blue_score = 0
+    blue_a_score, blue_a_type = get_score(blue_a_match)
+    blue_b_score, blue_b_type = get_score(blue_b_match)
+    # if we have two alliance scores...
+    if (blue_a_type == 2 or blue_a_type == 3) and (blue_b_type == 2 or blue_b_type == 3):
+        # average the two alliance scores
+        blue_score += (blue_a_score + blue_b_score) / 2
+    # if we have two team scores...
+    elif blue_a_type == 1 and blue_b_type == 1:
+        # add the two scores together
+        blue_score += blue_a_score + blue_b_score
+    # if we have one alliance and one team score...
+    elif (blue_a_type == 2 or blue_a_type == 3) and blue_b_type == 1:
+        # use the alliance score
+        blue_score += blue_a_score
+    elif (blue_b_type == 2 or blue_b_type == 3) and blue_a_type == 1:
+        # use the alliance score
+        blue_score += blue_b_score
 
     return red_score, blue_score
 
@@ -107,7 +148,6 @@ def get_current_standings(schedule: list, data: dict):
     teams = {}
     skipped = []
     for team in data.keys():
-        # teams[team] = {}
         teams[team] = {
             "RP": [],
             "TBP": []
