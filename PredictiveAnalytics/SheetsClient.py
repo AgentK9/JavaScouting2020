@@ -11,6 +11,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SPREADSHEET_ID = '16A_rdYkhWwQFlRJMx18Gy95HOMu1FNMhuRt_8OHnD00'
 
 
+# initializes the api client. Required for any operations on the sheet
 def get_service():
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -36,6 +37,7 @@ def get_service():
     return service
 
 
+# reads the spreadsheet and returns data from a specific location
 def get_data(service, location: str):
     # Call the Sheets API
     sheet = service.spreadsheets()
@@ -46,6 +48,7 @@ def get_data(service, location: str):
     return values
 
 
+# pushes data to the spreadsheet
 def push_data(service, location: str, data: list, user_entered: bool = False):
     sheet = service.spreadsheets()
     body = {"values": data}
