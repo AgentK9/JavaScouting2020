@@ -51,7 +51,7 @@ def get_score_from_complex(match: dict):
     total += autonomous["num_stones_delivered"] * 2
     total += autonomous["num_stones_placed"] * 4
     total += 10 if autonomous["moved_foundation"] else 0
-    total += autonomous["parked"] * 5
+    total += 5 if autonomous["parked"] else 0
 
     # tele-op
     teleOp = match["tele-op"]
@@ -61,11 +61,10 @@ def get_score_from_complex(match: dict):
 
     # end game
     end_game = match["end_game"]
-    total += end_game["num_caps"] * 5
-    total += end_game["num_cap_levels_1"]
-    total += end_game["num_cap_levels_2"]
+    total += 5 if end_game["capped"] else 0
+    total += end_game["num_cap_levels"] if end_game["capped"] else 0
     total += 15 if end_game["moved_foundation"] else 0
-    total += end_game["parked"] * 5
+    total += 5 if end_game["parked"] else 0
 
     return total
 
