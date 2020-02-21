@@ -33,7 +33,7 @@ data_structure = {  # Dict of Teams (key: number, data: data)
             "score": 0
         }
     }
-}
+}  # TODO: add penalties
 schedule_structure = [
     {
         "red": [1000, 1001],
@@ -84,7 +84,7 @@ def get_avg_team_score(team: dict):
     for key in team.keys():
         if key != "0":
             match = team[key]
-            total += get_score(match=match) # TODO: add pre-scouting support here
+            total += get_score(match=match)  # TODO: add pre-scouting support here
 
     return total / len(team.keys()) + (-1 if "0" in team.keys() else 0)
 
