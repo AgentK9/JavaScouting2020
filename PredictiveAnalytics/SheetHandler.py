@@ -67,7 +67,7 @@ def push_pred_analy_results(service, data: dict, schedule: list):
     standings = format_qual_standings(predict_analyze_qual_rankings(data=data, schedule=schedule))
 
     for (num, team) in enumerate(standings.keys()):
-        push_data(service, "Rank Predictions!B" + str(num + 1) + ":D" + str(num + 1), data=[
+        push_data(service, "Rank/Finals Predictions!B" + str(num + 2) + ":D" + str(num + 2), data=[
             [
                 int(team), standings[team]["RP"], standings[team]["TBP"]
             ]
