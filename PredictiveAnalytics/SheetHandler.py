@@ -48,9 +48,24 @@ def get_team_data(service):
     return teams
 
 
+def get_schedule(service):
+    raw = get_data(service=service, location="Match Schedule!B2:E100")
+
+    schedule = []
+
+    for row in raw:
+        schedule.append({
+            "red": [row[0], row[1]],
+            "blue": [row[2], row[3]]
+        })
+
+    return schedule
+
+
 def main():
     service = get_service()
     print(get_team_data(service))
+    print(get_schedule(service))
 
 
 if __name__ == '__main__':
