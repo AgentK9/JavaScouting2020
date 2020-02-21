@@ -40,12 +40,18 @@ def get_team_data(service):
                 "parked": bool_from_yes_no(row[19])
             }
 
-
         if str(row[0]) not in teams.keys():
             teams[str(row[0])] = {}
+
         teams[str(row[0])][str(row[1])] = match
 
+    return teams
 
 
+def main():
+    service = get_service()
+    print(get_team_data(service))
 
 
+if __name__ == '__main__':
+    main()
