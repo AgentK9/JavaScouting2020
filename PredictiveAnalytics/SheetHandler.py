@@ -50,7 +50,7 @@ def get_team_data(service):
 
 
 def get_schedule(service):
-    raw = get_data(service=service, location="Match Schedule!B2:E100")
+    raw = get_data(service=service, location="Match Schedule/Predictions/Results!B3:E100")
 
     schedule = []
 
@@ -67,7 +67,7 @@ def push_pred_analy_results(service, data: dict, schedule: list):
     standings = format_qual_standings(predict_analyze_qual_matches(data=data, schedule=schedule))
 
     for (num, team) in enumerate(standings.keys()):
-        push_data(service, "Rank Predictions/Results!B" + str(num + 1) + ":D" + str(num + 1), data=[
+        push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
             [
                 int(team), standings[team]["RP"], standings[team]["TBP"]
             ]
@@ -78,7 +78,7 @@ def main():
     service = get_service()
     team_data = get_team_data(service)
     schedule = get_schedule(service)
-    push_pred_analy_results(service, team_data, schedule)
+    push_pred_analy_results(service, team_data, schedule)  # TODO: separate pred analy with actual results
 
 
 if __name__ == '__main__':
