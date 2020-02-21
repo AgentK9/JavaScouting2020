@@ -64,21 +64,38 @@ def get_schedule(service):
 
 
 def push_pred_analy_results(service, data: dict, schedule: list):
-    standings = format_qual_standings(predict_analyze_qual_matches(data=data, schedule=schedule))
+    standings = format_qual_standings(predict_analyze_qual_rankings(data=data, schedule=schedule))
 
     for (num, team) in enumerate(standings.keys()):
-        push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
+        push_data(service, "Rank Predictions!B" + str(num + 1) + ":D" + str(num + 1), data=[
             [
                 int(team), standings[team]["RP"], standings[team]["TBP"]
             ]
         ])
+
+    for (num, match) in enumerate(schedule):
+        red_score, blue_score = get_match_score(schedule, num+1, data)
+        if not red_score and not blue_score:
+            red_score, blue_score = sim_match(schedule, num+1, data)
+
+            push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
+                [
+                    red_score, blue_score, "Red" if red_score > blue_score else "Blue"
+                ]
+            ])
+        else:
+            push_data(service, "Match Schedule/Predictions/Results!I" + str(num + 2) + ":K" + str(num + 2), data=[
+                [
+                    red_score, blue_score, "Red" if red_score > blue_score else "Blue"
+                ]
+            ])
 
 
 def main():
     service = get_service()
     team_data = get_team_data(service)
     schedule = get_schedule(service)
-    push_pred_analy_results(service, team_data, schedule)  # TODO: separate pred analy with actual results
+    push_pred_analy_results(service, team_data, schedule)
 
 
 if __name__ == '__main__':

@@ -84,7 +84,7 @@ def get_avg_team_score(team: dict):
     for key in team.keys():
         if key != "0":
             match = team[key]
-            total += get_score(match=match)
+            total += get_score(match=match) # TODO: add pre-scouting support here
 
     return total / len(team.keys()) + (-1 if "0" in team.keys() else 0)
 
@@ -192,24 +192,21 @@ def sim_match(schedule: list, match_num: int, data: dict):
     red_score = (avg_red_a + avg_red_b) / 2
     blue_score = (avg_blue_a + avg_blue_b) / 2
 
-    winner = "red" if max(red_score, blue_score) == red_score else "blue"
-    tbp = min(red_score, blue_score)
-
-    return winner, tbp
+    return red_score, blue_score
 
 
-def predict_analyze_qual_matches(data: dict, schedule: list):
+def predict_analyze_qual_rankings(data: dict, schedule: list):
     standings, skipped = get_current_standings(schedule=schedule, data=data)
 
     for match_num in skipped:
-        winner, tbp = sim_match(schedule=schedule, match_num=match_num, data=data)
+        red_score, blue_score = sim_match(schedule=schedule, match_num=match_num, data=data)
 
-        if winner == "red":
+        if red_score > blue_score:
             standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
             standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(2)
             standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(0)
             standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(0)
-        elif winner == "blue":
+        elif blue_score > red_score:
             standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(0)
             standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(0)
             standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(2)
