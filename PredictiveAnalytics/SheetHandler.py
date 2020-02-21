@@ -14,6 +14,7 @@ def get_team_data(service):
         match = {
             "alliance_color": row[2].lower(),
         }
+
         if "total" in row[3].lower():
             match["score"] = int(row[4])
         elif "phase" in row[3].lower():
@@ -64,8 +65,9 @@ def get_schedule(service):
 
 def main():
     service = get_service()
-    print(get_team_data(service))
-    print(get_schedule(service))
+    team_data = get_team_data(service)
+    schedule = get_schedule(service)
+    print(predict_analyze_qual_matches(data=team_data, schedule=schedule))
 
 
 if __name__ == '__main__':
