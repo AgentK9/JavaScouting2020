@@ -14,7 +14,11 @@ In this case, I am predicting who will win future qualification matches based on
 # TODO:
 Add elimination match Predictive Analytics \
 Finish sheets integration \
-Make sample form/sheet public
+Make sample form/sheet public \
+Make it into a proper daemon (ish)
+* Run in a loop
+* Take commands from sheet
+* Push status, errors to sheet
 # NOTE:
 This is under ACTIVE DEVELOPMENT! Changes will be made, etc. Nothing is safe. Trust me. 
 I will accept pull requests if and only if they are helpful to the overall project.
