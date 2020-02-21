@@ -63,11 +63,22 @@ def get_schedule(service):
     return schedule
 
 
+def push_pred_analy_results(service, data: dict, schedule: list):
+    standings = format_qual_standings(predict_analyze_qual_matches(data=data, schedule=schedule))
+
+    for (num, team) in enumerate(standings.keys()):
+        push_data(service, "Rank Predictions/Results!B" + str(num + 1) + ":D" + str(num + 1), data=[
+            [
+                int(team), standings[team]["RP"], standings[team]["TBP"]
+            ]
+        ])
+
+
 def main():
     service = get_service()
     team_data = get_team_data(service)
     schedule = get_schedule(service)
-    print(predict_analyze_qual_matches(data=team_data, schedule=schedule))
+    push_pred_analy_results(service, team_data, schedule)
 
 
 if __name__ == '__main__':
