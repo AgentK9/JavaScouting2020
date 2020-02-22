@@ -19,21 +19,23 @@ data_structure = {  # Dict of Teams (key: number, data: data)
                 "num_cap_levels": 0,
                 "moved_foundation": False,
                 "parked": False
-            }
+            },
+            "penalties": 0
 
         },
         "1": {  # alternate (simpler) format
             "alliance_color": "red",
             "auto_score": 0,
             "tele-op_score": 0,
-            "end_game_score": 0
+            "end_game_score": 0,
+            "penalties": 0
         },
         "2": {  # alternate (simplest) format
             "alliance_color": "red",  # (red/blue)
             "score": 0
         }
     }
-}  # TODO: add penalties
+}
 schedule_structure = [
     {
         "red": [1000, 1001],
@@ -81,12 +83,18 @@ def get_score(match: dict):
 def get_avg_team_score(team: dict):
     total = 0
 
-    for key in team.keys():
-        if key != "0":
-            match = team[key]
-            total += get_score(match=match)  # TODO: add pre-scouting support here
+    # if we only have one entry and that entry is a pre-scouting entry...
+    if len(team.keys()) == 1 and team.keys() == ["0"]:
+        # use that entry
+        return get_score_from_complex(team["0"])
+    # otherwise (we have match data)
+    else:
+        for key in team.keys():
+            if key != "0":
+                match = team[key]
+                total += get_score(match=match)
 
-    return total / len(team.keys()) + (-1 if "0" in team.keys() else 0)
+        return total / len(team.keys()) + (-1 if "0" in team.keys() else 0)
 
 
 def get_match_score(schedule: list, match_num: int, data: dict):
