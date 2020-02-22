@@ -1,3 +1,4 @@
+from operator import itemgetter
 data_structure = {  # Dict of Teams (key: number, data: data)
     "0000": {  # Team
         "0": {  # Match/Pre-Match Scouting
@@ -273,18 +274,95 @@ def predict_alliance_selection(standings: dict, data: dict):
     return alliances
 
 
+def sorted_by_avg_score(team_nums: list, data: dict):
+    avg_scores = {k: get_avg_team_score(data[k]) for k in team_nums}
+    return [k for k, v in sorted(avg_scores.items(), key=lambda item: item[1], reverse=True)]
+
+
 def predict_elim_matches(alliances: list, data: dict):
+    winners = []
+    match_data = []
+
     for best_of_three in range(3):
+        red_alliance = alliances[0] if best_of_three == 0 else alliances[1] if best_of_three == 1 else winners[0]
+        blue_alliance = alliances[3] if best_of_three == 0 else alliances[2] if best_of_three == 1 else winners[1]
+        red_alliance = sorted_by_avg_score(red_alliance, data)
+        blue_alliance = sorted_by_avg_score(blue_alliance, data)
+
         red_wins = 0
         blue_wins = 0
 
-        sim_match(match={
+        red_score, blue_score = sim_match(match={
             "red": [
-
+                red_alliance[0], red_alliance[1]
             ],
             "blue": [
-
+                blue_alliance[0], blue_alliance[1]
             ]
         }, data=data)
+
+        match_data.append([
+            str(alliances.index(red_alliance) + 1),
+            red_alliance[0], red_alliance[1], red_score,
+            str(alliances.index(blue_alliance) + 1),
+            blue_alliance[0], blue_alliance[1], blue_score,
+            "red" if red_score > blue_score else "blue" if blue_score > red_score else "tie"
+        ])
+
+        red_wins += 1 if red_score > blue_score else 0
+        blue_wins += 1 if blue_score > blue_score else 0
+
+        red_score, blue_score = sim_match(match={
+            "red": [
+                red_alliance[0], red_alliance[2]
+            ],
+            "blue": [
+                blue_alliance[0], blue_alliance[2]
+            ]
+        }, data=data)
+
+        match_data.append([
+            str(alliances.index(red_alliance) + 1),
+            red_alliance[0], red_alliance[1], red_score,
+            str(alliances.index(blue_alliance) + 1),
+            blue_alliance[0], blue_alliance[1], blue_score,
+            "red" if red_score > blue_score else "blue" if blue_score > red_score else "tie"
+        ])
+
+        red_wins += 1 if red_score > blue_score else 0
+        blue_wins += 1 if blue_score > blue_score else 0
+
+        repetitions = 0
+        if red_wins < 2 or blue_wins < 2:
+            match_data.append([])
+        while red_wins < 2 or blue_wins < 2 and repetitions < 5:
+            red_score, blue_score = sim_match(match={
+                "red": [
+                    red_alliance[0], red_alliance[1]
+                ],
+                "blue": [
+                    blue_alliance[0], blue_alliance[1]
+                ]
+            }, data=data)
+
+            match_data.append([
+                str(alliances.index(red_alliance) + 1),
+                red_alliance[0], red_alliance[1], red_score,
+                str(alliances.index(blue_alliance) + 1),
+                blue_alliance[0], blue_alliance[1], blue_score,
+                "red" if red_score > blue_score else "blue" if blue_score > red_score else "tie"
+            ])
+
+            red_wins += 1 if red_score > blue_score else 0
+            blue_wins += 1 if blue_score > blue_score else 0
+
+            repetitions += 1
+
+        if red_wins > blue_wins:
+            winners.append(red_alliance)
+        else:
+            winners.append(blue_alliance)
+
+    return match_data
 
 
