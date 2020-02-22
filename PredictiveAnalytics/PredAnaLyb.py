@@ -191,11 +191,12 @@ def get_current_standings(schedule: list, data: dict):
     return teams, skipped
 
 
-def sim_match(schedule: list, match_num: int, data: dict):
-    avg_red_a = get_avg_team_score(data[str(schedule[match_num - 1]["red"][0])])
-    avg_red_b = get_avg_team_score(data[str(schedule[match_num - 1]["red"][1])])
-    avg_blue_a = get_avg_team_score(data[str(schedule[match_num - 1]["blue"][0])])
-    avg_blue_b = get_avg_team_score(data[str(schedule[match_num - 1]["blue"][1])])
+def sim_match(match: dict, data: dict):
+
+    avg_red_a = get_avg_team_score(data[str(match["red"][0])])
+    avg_red_b = get_avg_team_score(data[str(match["red"][1])])
+    avg_blue_a = get_avg_team_score(data[str(match["blue"][0])])
+    avg_blue_b = get_avg_team_score(data[str(match["blue"][1])])
 
     red_score = (avg_red_a + avg_red_b) / 2
     blue_score = (avg_blue_a + avg_blue_b) / 2
@@ -207,7 +208,7 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
     standings, skipped = get_current_standings(schedule=schedule, data=data)
 
     for match_num in skipped:
-        red_score, blue_score = sim_match(schedule=schedule, match_num=match_num, data=data)
+        red_score, blue_score = sim_match(match=schedule[match_num - 1], data=data)
 
         if red_score > blue_score:
             standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
@@ -253,15 +254,18 @@ def predict_alliance_selection(standings: dict, data: dict):
 
     if len(standings) >= 12:
         for i in range(0, 4):
+            # captain
             alliance = [int(standings[0])]
             avg_scores.remove(standings[0])
             standings.remove(standings[0])
+            # first pick
             alliance.append(int(avg_scores[0]))
             standings.remove(avg_scores[0])
             avg_scores.remove(avg_scores[0])
 
     if len(standings) >= 15:
         for alliance in alliances:
+            # second pick if needed
             alliance.append(int(avg_scores[0]))
             standings.remove(avg_scores[0])
             avg_scores.remove(avg_scores[0])
@@ -269,7 +273,18 @@ def predict_alliance_selection(standings: dict, data: dict):
     return alliances
 
 
+def predict_elim_matches(alliances: list, data: dict):
+    for best_of_three in range(3):
+        red_wins = 0
+        blue_wins = 0
 
+        sim_match(match={
+            "red": [
 
+            ],
+            "blue": [
+
+            ]
+        }, data=data)
 
 

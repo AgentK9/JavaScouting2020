@@ -78,7 +78,7 @@ def push_pred_analy_results(service, data: dict, schedule: list):
     for (num, match) in enumerate(schedule):
         red_score, blue_score = get_match_score(schedule, num+1, data)
         if not red_score and not blue_score:
-            red_score, blue_score = sim_match(schedule, num+1, data)
+            red_score, blue_score = sim_match(match, data)
 
             push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
                 [
