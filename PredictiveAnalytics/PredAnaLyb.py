@@ -71,7 +71,7 @@ def get_score_from_complex(match: dict):
     return total
 
 
-def get_score(match: dict):
+def get_score(match: dict): # TODO: add penalty stuff here
     if "score" in match.keys():
         return match["score"], 1
     elif "auto_score" in match.keys():
@@ -92,7 +92,7 @@ def get_avg_team_score(team: dict):
         for key in team.keys():
             if key != "0":
                 match = team[key]
-                total += get_score(match=match)
+                total += get_score(match=match)[0]
 
         return total / len(team.keys()) + (-1 if "0" in team.keys() else 0)
 
@@ -242,3 +242,34 @@ def format_qual_standings(standings: dict, print_: bool = False):
             print(num + 1, team, rp_sorted[team]["RP"], rp_sorted[team]["TBP"])
 
     return rp_sorted
+
+
+def predict_alliance_selection(standings: dict, data: dict):
+    standings = [k for k in format_qual_standings(standings).keys()]
+    avg_scores = {k: get_avg_team_score(data[k]) for k in standings}
+    avg_scores = [k for k, v in sorted(avg_scores.items(), key=lambda item: item[1], reverse=True)]
+
+    alliances = []
+
+    if len(standings) >= 12:
+        for i in range(0, 4):
+            alliance = [int(standings[0])]
+            avg_scores.remove(standings[0])
+            standings.remove(standings[0])
+            alliance.append(int(avg_scores[0]))
+            standings.remove(avg_scores[0])
+            avg_scores.remove(avg_scores[0])
+
+    if len(standings) >= 15:
+        for alliance in alliances:
+            alliance.append(int(avg_scores[0]))
+            standings.remove(avg_scores[0])
+            avg_scores.remove(avg_scores[0])
+
+    return alliances
+
+
+
+
+
+

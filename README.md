@@ -13,7 +13,6 @@ Predictive analytics is basically predicting the future from past data.
 In this case, I am predicting who will win future qualification matches based on scouting data or actual match data.
 # TODO:
 Add elimination match Predictive Analytics \
-Finish sheets integration \
 Make sample form/sheet public \
 Make it into a proper daemon (ish)
 * Run in a loop

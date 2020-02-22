@@ -21,25 +21,27 @@ def get_team_data(service):
             match["auto_score"] = int(row[5])
             match["tele-op_score"] = int(row[6])
             match["end_game_score"] = int(row[7])
+            match["penalties"] = int(row[8])
         elif "team" in row[3].lower():
             match["autonomous"] = {
-                "num_skystones_delivered": int(row[8]),
-                "num_stones_delivered": int(row[9]),
-                "num_stones_placed": int(row[10]),
-                "moved_foundation": bool_from_yes_no(row[11]),
-                "parked": bool_from_yes_no(row[12])
+                "num_skystones_delivered": int(row[9]),
+                "num_stones_delivered": int(row[10]),
+                "num_stones_placed": int(row[11]),
+                "moved_foundation": bool_from_yes_no(row[12]),
+                "parked": bool_from_yes_no(row[13])
             }
             match["tele-op"] = {
-                "num_stones_delivered": int(row[13]),
-                "num_stones_placed": int(row[14]),
-                "tallest_skyscraper_levels": int(row[15])
+                "num_stones_delivered": int(row[14]),
+                "num_stones_placed": int(row[15]),
+                "tallest_skyscraper_levels": int(row[16])
             }
             match["end_game"] = {
-                "capped": bool_from_yes_no(row[16]),
-                "num_cap_levels": int(row[17]),
-                "moved_foundation": bool_from_yes_no(row[18]),
-                "parked": bool_from_yes_no(row[19])
+                "capped": bool_from_yes_no(row[17]),
+                "num_cap_levels": int(row[18]),
+                "moved_foundation": bool_from_yes_no(row[19]),
+                "parked": bool_from_yes_no(row[20])
             }
+            match["penalties"] = int(row[23])
 
         if str(row[0]) not in teams.keys():
             teams[str(row[0])] = {}
@@ -90,12 +92,21 @@ def push_pred_analy_results(service, data: dict, schedule: list):
                 ]
             ])
 
+    return standings
+
+
+def push_alliance_results(service, standings: dict, data: dict):
+    alliances = predict_alliance_selection(standings=standings, data=data)
+
+    push_data(service, "Rank/Finals Predictions!G3:I6", data=alliances)
+
 
 def main():
     service = get_service()
     team_data = get_team_data(service)
     schedule = get_schedule(service)
-    push_pred_analy_results(service, team_data, schedule)
+    standings = push_pred_analy_results(service, team_data, schedule)
+    push_alliance_results(service, standings, team_data)
 
 
 if __name__ == '__main__':
