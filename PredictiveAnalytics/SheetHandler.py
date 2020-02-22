@@ -100,13 +100,24 @@ def push_alliance_results(service, standings: dict, data: dict):
 
     push_data(service, "Rank/Finals Predictions!G3:I6", data=alliances)
 
+    return alliances
+
+
+def push_elim_results(service, alliances: list, data: dict):
+    elim_matches = predict_elim_matches(alliances, data)
+
+    push_data(service, "Rank/Finals Predictions!L3:T11", data=elim_matches)
+
+    return elim_matches
+
 
 def main():
     service = get_service()
     team_data = get_team_data(service)
     schedule = get_schedule(service)
     standings = push_pred_analy_results(service, team_data, schedule)
-    push_alliance_results(service, standings, team_data)
+    alliances = push_alliance_results(service, standings, team_data)
+    elim_matches = push_elim_results(service, alliances, team_data)
 
 
 if __name__ == '__main__':
