@@ -12,11 +12,8 @@ Those insights are then pushed back to the sheet for human readability.
 Predictive analytics is basically predicting the future from past data. 
 In this case, I am predicting who will win future qualification matches based on scouting data or actual match data.
 # TODO:
-Make sample form/sheet public \
-Make it into a proper daemon (ish)
-* Run in a loop
-* Take commands from sheet
-* Push status, errors to sheet
+Minor tweaks/debugging \
+Make sample form/sheet public
 # NOTE:
 This is under ACTIVE DEVELOPMENT! Changes will be made, etc. Nothing is safe. Trust me. 
 I will accept pull requests if and only if they are helpful to the overall project.
