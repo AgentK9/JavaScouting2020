@@ -29,7 +29,7 @@ def main():
             schedule = get_schedule(service)
 
         except Exception as e:
-            set_status(service, "error", error=str(e))
+            set_status(service, "error-getting", error=str(e))
             print(str(e))
 
         try:
@@ -38,26 +38,25 @@ def main():
             alliances = push_alliance_results(service, standings, team_data)
             elim_matches = push_elim_results(service, alliances, team_data)
         except Exception as e:
-            set_status(service, "error", error=str(e))
+            set_status(service, "error-analyzing", error=str(e))
             print(str(e))
 
         try:
+            set_status(service, "command")
             command = get_command(service)
             if command == "continue":
                 continue
             elif command == "reset":
                 # TODO: Implement Reset
-                x = 0
+                continue
             elif command == "quit":
                 sys.exit()
             else:
                 set_status(service, "pause")
                 while get_command(service) != "continue" and command != "reset" and command != "quit":
                     sleep(2.5)
-
-
         except Exception as e:
-            set_status(service, "error", error=str(e))
+            set_status(service, "error-command", error=str(e))
             print(str(e))
 
 
