@@ -110,7 +110,7 @@ def push_elim_results(service, alliances: list, data: dict):
 
     return elim_matches
 
-
+"""
 def main():
     service = get_service()
     team_data = get_team_data(service)
@@ -122,3 +122,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""

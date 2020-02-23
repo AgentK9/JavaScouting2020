@@ -1,4 +1,3 @@
-from operator import itemgetter
 data_structure = {  # Dict of Teams (key: number, data: data)
     "0000": {  # Team
         "0": {  # Match/Pre-Match Scouting
