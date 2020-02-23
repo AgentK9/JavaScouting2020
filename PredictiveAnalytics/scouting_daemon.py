@@ -51,6 +51,7 @@ def main():
             elif command == "quit":
                 sys.exit()
             else:
+                set_status(service, "pause")
                 while get_command(service) != "continue" and command != "reset" and command != "quit":
                     sleep(2.5)
 
@@ -58,3 +59,7 @@ def main():
         except Exception as e:
             set_status(service, "error", error=str(e))
             print(str(e))
+
+
+if __name__ == "__main__":
+    main()
