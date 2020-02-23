@@ -23,7 +23,6 @@ def main():
         team_data = None
         schedule = None
         try:
-            global team_data, schedule
             set_status(service, "getting")
             team_data = get_team_data(service)
             schedule = get_schedule(service)
