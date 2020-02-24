@@ -48,6 +48,7 @@ def main():
         try:
             set_status(service, "command")
             command = get_command(service)
+            sleep(10)
             if command == "continue":
                 continue
             elif command == "reset":
@@ -58,11 +59,13 @@ def main():
             else:
                 set_status(service, "pause")
                 while get_command(service) != "continue" and command != "reset" and command != "quit":
-                    sleep(2.5)
+                    sleep(5)
+
         except Exception as e:
             set_status(service, "error-command", error=str(e))
             print("command")
             print(str(e))
+
 
 
 if __name__ == "__main__":
