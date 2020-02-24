@@ -282,6 +282,9 @@ def predict_elim_matches(alliances: list, data: dict):
     winners = []
     match_data = []
 
+    if len(alliances) != 4:
+        return None
+
     for best_of_three in range(3):
         red_alliance = alliances[0] if best_of_three == 0 else alliances[1] if best_of_three == 1 else winners[0]
         blue_alliance = alliances[3] if best_of_three == 0 else alliances[2] if best_of_three == 1 else winners[1]
