@@ -46,9 +46,10 @@ def main():
             print(str(e))
 
         try:
+            set_status(service, "waiting")
+            sleep(10)
             set_status(service, "command")
             command = get_command(service)
-            sleep(10)
             if command == "continue":
                 continue
             elif command == "reset":
