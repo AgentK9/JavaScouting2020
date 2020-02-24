@@ -32,8 +32,8 @@ def main():
 
         except Exception as e:
             set_status(service, "error-getting", error=str(e))
+            print("getting")
             print(str(e))
-            print(e.__traceback__)
 
         try:
             set_status(service, "analyzing")
@@ -42,8 +42,8 @@ def main():
             elim_matches = push_elim_results(service, alliances, team_data)
         except Exception as e:
             set_status(service, "error-analyzing", error=str(e))
+            print("analyzing")
             print(str(e))
-            print(e.__traceback__)
 
         try:
             set_status(service, "command")
@@ -61,8 +61,8 @@ def main():
                     sleep(2.5)
         except Exception as e:
             set_status(service, "error-command", error=str(e))
+            print("command")
             print(str(e))
-            print(e.__traceback__)
 
 
 if __name__ == "__main__":
