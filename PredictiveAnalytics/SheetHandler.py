@@ -1,5 +1,5 @@
-from PredictiveAnalytics.SheetsClient import *
-from PredictiveAnalytics.PredAnaLyb import *
+from SheetsClient import *
+from PredAnaLyb import *
 
 
 def bool_from_yes_no(yesno: str):

@@ -1,5 +1,5 @@
-from PredictiveAnalytics.SheetHandler import *
-from PredictiveAnalytics.SheetsClient import *
+from SheetHandler import *
+from SheetsClient import *
 from datetime import datetime
 from time import sleep
 import sys
