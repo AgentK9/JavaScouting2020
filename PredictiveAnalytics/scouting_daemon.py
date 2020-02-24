@@ -60,7 +60,7 @@ def main():
             else:
                 set_status(service, "pause")
                 while get_command(service) != "continue" and command != "reset" and command != "quit":
-                    sleep(5)
+                    sleep(15)
 
         except Exception as e:
             set_status(service, "error-command", error=str(e))
