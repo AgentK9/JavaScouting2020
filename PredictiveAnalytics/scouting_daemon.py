@@ -37,8 +37,11 @@ def main():
 
         try:
             set_status(service, "analyzing")
+            print("qual")
             standings = push_pred_analy_results(service, team_data, schedule)
+            print("alliance")
             alliances = push_alliance_results(service, standings, team_data)
+            print("elimination")
             elim_matches = push_elim_results(service, alliances, team_data)
         except Exception as e:
             set_status(service, "error-analyzing", error=str(e))
