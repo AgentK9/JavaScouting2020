@@ -10,7 +10,7 @@ def set_status(service, message, error=None):
         [
             str(datetime.now().time()),
             message,
-            error,
+            error if error else "",
             "pause" if error else None
         ]
     ])
