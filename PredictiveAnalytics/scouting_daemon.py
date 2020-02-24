@@ -48,7 +48,6 @@ def main():
         try:
             set_status(service, "command")
             command = get_command(service)
-            print(command)
             if command == "continue":
                 continue
             elif command == "reset":
