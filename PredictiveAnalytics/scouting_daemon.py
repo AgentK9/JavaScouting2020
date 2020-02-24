@@ -6,11 +6,12 @@ import sys
 
 
 def set_status(service, message, error=None):
-    push_data(service, "Script Status!A2:C2", data=[
+    push_data(service, "Script Status!A2:D2", data=[
         [
             str(datetime.now().time()),
             message,
-            error
+            error,
+            "pause" if error else None
         ]
     ])
 
@@ -32,6 +33,7 @@ def main():
         except Exception as e:
             set_status(service, "error-getting", error=str(e))
             print(str(e))
+            print(e.__traceback__)
 
         try:
             set_status(service, "analyzing")
@@ -41,6 +43,7 @@ def main():
         except Exception as e:
             set_status(service, "error-analyzing", error=str(e))
             print(str(e))
+            print(e.__traceback__)
 
         try:
             set_status(service, "command")
@@ -59,6 +62,7 @@ def main():
         except Exception as e:
             set_status(service, "error-command", error=str(e))
             print(str(e))
+            print(e.__traceback__)
 
 
 if __name__ == "__main__":
