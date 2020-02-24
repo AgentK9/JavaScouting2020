@@ -17,7 +17,7 @@ def set_status(service, message, error=None):
 
 
 def get_command(service):
-    return get_data(service, "Script Status!D2")
+    return get_data(service, "Script Status!D2")[0][0]
 
 
 def main():
