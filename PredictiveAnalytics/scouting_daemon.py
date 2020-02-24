@@ -7,7 +7,7 @@ import sys
 
 def set_status(service, message, error=None):
     push_data(service, "Script Status!A2:C2", data=[
-        datetime.now(),
+        str(datetime.now()),
         message,
         error
     ])
