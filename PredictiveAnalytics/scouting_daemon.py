@@ -47,7 +47,7 @@ def main():
 
         try:
             set_status(service, "waiting")
-            sleep(10)
+            sleep(60)
             set_status(service, "command")
             command = get_command(service)
             if command == "continue":

@@ -1,5 +1,6 @@
 from SheetsClient import *
 from PredAnaLyb import *
+from time import sleep
 
 
 def bool_from_yes_no(yesno: str):
@@ -68,12 +69,14 @@ def get_schedule(service):
 def push_pred_analy_results(service, data: dict, schedule: list):
     standings = format_qual_standings(predict_analyze_qual_rankings(data=data, schedule=schedule))
 
+    standings_data = []
     for (num, team) in enumerate(standings.keys()):
-        push_data(service, "Rank/Finals Predictions!B" + str(num + 2) + ":D" + str(num + 2), data=[
+        standings_data.append(
             [
                 int(team), standings[team]["RP"], standings[team]["TBP"]
             ]
-        ])
+        )
+    push_data(service, "Rank/Finals Predictions!B3:D" + str(len(standings_data) + 3), data=standings_data)
 
     for (num, match) in enumerate(schedule):
         red_score, blue_score = get_match_score(schedule, num+1, data)
@@ -91,6 +94,8 @@ def push_pred_analy_results(service, data: dict, schedule: list):
                     red_score, blue_score, "Red" if red_score > blue_score else "Blue"
                 ]
             ])
+        sleep(5)
+
 
     return standings
 
