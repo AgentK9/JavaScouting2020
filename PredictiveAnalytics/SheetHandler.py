@@ -85,18 +85,19 @@ def push_pred_analy_results(service, data: dict, schedule: list):
 
             push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
                 [
-                    red_score, blue_score, "Red" if red_score > blue_score else "Blue"
+                    red_score, blue_score, None if not red_score or not blue_score else
+                    "Red" if red_score > blue_score else "Blue"
                 ]
             ])
         else:
             push_data(service, "Match Schedule/Predictions/Results!I" + str(num + 2) + ":K" + str(num + 2), data=[
                 [
-                    red_score, blue_score, "Red" if red_score > blue_score else "Blue"
+                    red_score, blue_score, None if not red_score or not blue_score else
+                    "Red" if red_score > blue_score else "Blue"
                 ]
             ])
         sleep(5)
-
-
+    print("done")
     return standings
 
 

@@ -81,8 +81,6 @@ def get_score(match: dict): # TODO: add penalty stuff here
 
 
 def get_avg_team_score(team: dict):
-    print("got here")
-    print(team)
     total = 0
 
     # if we don't have any data on that team...
@@ -198,6 +196,9 @@ def get_current_standings(schedule: list, data: dict):
 
 def sim_match(match: dict, data: dict):
 
+    if not (str(match["red"][0]) in data.keys() or str(match["red"][1]) in data.keys()
+            or str(match["blue"][0]) in data.keys() or str(match["blue"][1]) in data.keys()):
+        return None, None
     avg_red_a = get_avg_team_score(data[str(match["red"][0])])
     avg_red_b = get_avg_team_score(data[str(match["red"][1])])
     avg_blue_a = get_avg_team_score(data[str(match["blue"][0])])
