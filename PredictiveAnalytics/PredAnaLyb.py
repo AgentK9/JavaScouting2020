@@ -214,6 +214,7 @@ def sim_match(match: dict, data: dict):
 def predict_analyze_qual_rankings(data: dict, schedule: list):
     # get standings data
     standings, skipped = get_current_standings(schedule=schedule, data=data)
+    print("got here")
 
     # for each match we don't have data on, simulate it and add it to the standings
     for match_num in skipped:
