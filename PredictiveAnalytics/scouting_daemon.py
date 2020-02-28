@@ -6,9 +6,10 @@ import sys
 
 
 def set_status(service, message, error=None):
+    time = datetime.now().time()
     push_data(service, "Script Status!A2:D2", data=[
         [
-            str(datetime.now().time()),
+            str(time.hour % 12) + ":" + str(time.minute) + ":" + str(time.second),
             message,
             error if error else "",
             "pause" if error else None
