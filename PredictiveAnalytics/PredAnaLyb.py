@@ -214,11 +214,11 @@ def sim_match(match: dict, data: dict):
 def predict_analyze_qual_rankings(data: dict, schedule: list):
     # get standings data
     standings, skipped = get_current_standings(schedule=schedule, data=data)
-    print("got here")
 
     # for each match we don't have data on, simulate it and add it to the standings
     for match_num in skipped:
         red_score, blue_score = sim_match(match=schedule[match_num - 1], data=data)
+        print("got here")
         if red_score and blue_score:
             if red_score > blue_score:
                 standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
