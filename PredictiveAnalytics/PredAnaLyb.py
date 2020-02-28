@@ -200,6 +200,7 @@ def sim_match(match: dict, data: dict):
     avg_red_b = get_avg_team_score(data[str(match["red"][1])])
     avg_blue_a = get_avg_team_score(data[str(match["blue"][0])])
     avg_blue_b = get_avg_team_score(data[str(match["blue"][1])])
+    print("got here")
 
     if None in [avg_blue_a, avg_red_a, avg_blue_b, avg_red_b]:
         return None, None
@@ -218,7 +219,6 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
     # for each match we don't have data on, simulate it and add it to the standings
     for match_num in skipped:
         red_score, blue_score = sim_match(match=schedule[match_num - 1], data=data)
-        print("got here")
         if red_score and blue_score:
             if red_score > blue_score:
                 standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
