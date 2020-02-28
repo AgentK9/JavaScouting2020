@@ -229,6 +229,11 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
             standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(1)
             standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(1)
 
+        standings[str(schedule[match_num - 1]["red"][0])]["TBP"].append(min(red_score, blue_score))
+        standings[str(schedule[match_num - 1]["red"][1])]["TBP"].append(min(red_score, blue_score))
+        standings[str(schedule[match_num - 1]["blue"][0])]["TBP"].append(min(red_score, blue_score))
+        standings[str(schedule[match_num - 1]["blue"][1])]["TBP"].append(min(red_score, blue_score))
+
     # return the updated standings
     return standings
 
