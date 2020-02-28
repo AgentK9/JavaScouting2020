@@ -268,7 +268,7 @@ def format_qual_standings(standings: dict, print_: bool = False):
 # predict the alliance selections
 def predict_alliance_selection(standings: dict, data: dict):
     # get the rankings as a list
-    standings = [k for k in format_qual_standings(standings).keys()]
+    standings = [k for k in standings]
     # get each team's average team scores, sort it with the maximum first, and turn it into a list
     avg_scores = {k: get_avg_team_score(data[k]) for k in standings}
     avg_scores = [k for k, v in sorted(avg_scores.items(), key=lambda item: item[1], reverse=True)]
@@ -328,9 +328,6 @@ def predict_elim_matches(alliances: list, data: dict):
         red_alliance = sorted_by_avg_score(orig_red_alliance, data)
         blue_alliance = sorted_by_avg_score(orig_blue_alliance, data)
 
-        print(red_alliance)
-        print(blue_alliance)
-
         # how many wins each alliance has
         red_wins = 0
         blue_wins = 0
@@ -356,7 +353,7 @@ def predict_elim_matches(alliances: list, data: dict):
 
         # add 1 to red or blue wins depending on the score
         red_wins += 1 if red_score > blue_score else 0
-        blue_wins += 1 if blue_score > blue_score else 0
+        blue_wins += 1 if blue_score > red_score else 0
 
         # simulate the second match, go through the same process
         red_score, blue_score = sim_match(match={
@@ -377,12 +374,11 @@ def predict_elim_matches(alliances: list, data: dict):
         ])
 
         red_wins += 1 if red_score > blue_score else 0
-        blue_wins += 1 if blue_score > blue_score else 0
+        blue_wins += 1 if blue_score > red_score else 0
 
         # if red or blue has two wins, add a blank list to match data (things wouldn't line up in the sheet)
         if red_wins < 2 or blue_wins < 2:
             match_data.append([])
-        print(red_wins < 2 or blue_wins < 2)
 
         # if we are indecisive from the first two matches, run up to 5 matches until we have an answer.
         # (limit of 5 just in case we have some weird ties or whatever and the loop becomes infinite)
@@ -406,7 +402,7 @@ def predict_elim_matches(alliances: list, data: dict):
             ])
 
             red_wins += 1 if red_score > blue_score else 0
-            blue_wins += 1 if blue_score > blue_score else 0
+            blue_wins += 1 if blue_score > red_score else 0
 
             repetitions += 1
 

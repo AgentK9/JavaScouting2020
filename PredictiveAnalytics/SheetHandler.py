@@ -13,17 +13,17 @@ def get_team_data(service):
 
     for row in raw:
         match = {
-            "alliance_color": row[2].lower(),
+            "alliance_color": row[3].lower(),
         }
 
-        if "total" in row[3].lower():
+        if len(row) <= 5:
             match["score"] = int(row[4])
-        elif "phase" in row[3].lower():
+        elif len(row) <= 9:
             match["auto_score"] = int(row[5])
             match["tele-op_score"] = int(row[6])
             match["end_game_score"] = int(row[7])
             match["penalties"] = int(row[8])
-        elif "team" in row[3].lower():
+        else:
             match["autonomous"] = {
                 "num_skystones_delivered": int(row[9]),
                 "num_stones_delivered": int(row[10]),
@@ -42,7 +42,7 @@ def get_team_data(service):
                 "moved_foundation": bool_from_yes_no(row[19]),
                 "parked": bool_from_yes_no(row[20])
             }
-            match["penalties"] = int(row[23])
+            match["penalties"] = int(row[21])
 
         if str(row[0]) not in teams.keys():
             teams[str(row[0])] = {}
@@ -83,20 +83,20 @@ def push_pred_analy_results(service, data: dict, schedule: list):
         if not red_score and not blue_score:
             red_score, blue_score = sim_match(match, data)
 
-            push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 2) + ":H" + str(num + 2), data=[
+            push_data(service, "Match Schedule/Predictions/Results!F" + str(num + 3) + ":H" + str(num + 3), data=[
                 [
                     red_score, blue_score, None if not red_score or not blue_score else
                     "Red" if red_score > blue_score else "Blue"
                 ]
             ])
         else:
-            push_data(service, "Match Schedule/Predictions/Results!I" + str(num + 2) + ":K" + str(num + 2), data=[
+            push_data(service, "Match Schedule/Predictions/Results!I" + str(num + 3) + ":K" + str(num + 3), data=[
                 [
                     red_score, blue_score, None if not red_score or not blue_score else
                     "Red" if red_score > blue_score else "Blue"
                 ]
             ])
-        sleep(5)
+        sleep(.5)
     return standings
 
 
