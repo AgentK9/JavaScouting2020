@@ -56,10 +56,10 @@ def get_score_from_complex(match: dict):
     total += 5 if autonomous["parked"] else 0
 
     # tele-op
-    teleOp = match["tele-op"]
-    total += teleOp["num_stones_delivered"]
-    total += teleOp["num_stones_placed"]
-    total += teleOp["tallest_skyscraper_levels"] * 2
+    tele_op = match["tele-op"]
+    total += tele_op["num_stones_delivered"]
+    total += tele_op["num_stones_placed"]
+    total += tele_op["tallest_skyscraper_levels"] * 2
 
     # end game
     end_game = match["end_game"]
@@ -71,7 +71,7 @@ def get_score_from_complex(match: dict):
     return total
 
 
-def get_score(match: dict): # TODO: add penalty stuff here
+def get_score(match: dict):  # TODO: add penalty stuff here
     if "score" in match.keys():
         return match["score"], 1
     elif "auto_score" in match.keys():
@@ -418,5 +418,3 @@ def predict_elim_matches(alliances: list, data: dict):
 
     # return the match data
     return match_data
-
-

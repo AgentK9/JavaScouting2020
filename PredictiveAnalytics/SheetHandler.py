@@ -97,7 +97,6 @@ def push_pred_analy_results(service, data: dict, schedule: list):
                 ]
             ])
         sleep(5)
-    print("done")
     return standings
 
 
