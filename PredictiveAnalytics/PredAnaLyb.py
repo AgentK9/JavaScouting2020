@@ -251,7 +251,11 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
 def format_qual_standings(standings: dict, print_: bool = False):
     # calculate the TBP and RP (stupid formulas this year)
     for team in standings.keys():
-        standings[team]["TBP"].remove(min(standings[team]["TBP"]))
+        if len(standings[team]["TBP"]) == 0 or len(standings[team]["RP"]) == 0:
+            standings[team]["TBP"].append(0)
+            standings[team]["RP"].append(0)
+        if len(standings[team]["TBP"]) > 1:
+            standings[team]["TBP"].remove(min(standings[team]["TBP"]))
         standings[team]["TBP"] = round(sum(standings[team]["TBP"]) / len(standings[team]["TBP"]), 2)
         standings[team]["RP"] = round(sum(standings[team]["RP"]) / len(standings[team]["RP"]), 2)
     # sort by TBP, and then RP

@@ -1,5 +1,5 @@
-from SheetsClient import *
-from PredAnaLyb import *
+from PredictiveAnalytics.SheetsClient import *
+from PredictiveAnalytics.PredAnaLyb import *
 from time import sleep
 
 
