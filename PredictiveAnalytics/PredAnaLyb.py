@@ -204,9 +204,12 @@ def sim_match(match: dict, data: dict):
     return red_score, blue_score
 
 
+# predict the qualification rankings
 def predict_analyze_qual_rankings(data: dict, schedule: list):
+    # get standings data
     standings, skipped = get_current_standings(schedule=schedule, data=data)
 
+    # for each match we don't have data on, simulate it and add it to the standings
     for match_num in skipped:
         red_score, blue_score = sim_match(match=schedule[match_num - 1], data=data)
 
@@ -226,43 +229,52 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
             standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(1)
             standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(1)
 
+    # return the updated standings
     return standings
 
 
+# take the standings data and turn it into the actual data that they show on the pit display and such
 def format_qual_standings(standings: dict, print_: bool = False):
+    # calculate the TBP and RP (stupid formulas this year)
     for team in standings.keys():
         standings[team]["TBP"].remove(min(standings[team]["TBP"]))
         standings[team]["TBP"] = round(sum(standings[team]["TBP"]) / len(standings[team]["TBP"]), 2)
         standings[team]["RP"] = round(sum(standings[team]["RP"]) / len(standings[team]["RP"]), 2)
-
+    # sort by TBP, and then RP
     tbp_sorted = sorted(standings.items(), key=lambda item: item[1]["TBP"], reverse=True)
     rp_sorted = {k: v for k, v in sorted(tbp_sorted, key=lambda item: item[1]["RP"], reverse=True)}
-
+    # print it out if specified
     if print_:
         for (num, team) in enumerate(rp_sorted.keys()):
             print(num + 1, team, rp_sorted[team]["RP"], rp_sorted[team]["TBP"])
-
+    # return the sorted data
     return rp_sorted
 
 
+# predict the alliance selections
 def predict_alliance_selection(standings: dict, data: dict):
+    # get the rankings as a list
     standings = [k for k in format_qual_standings(standings).keys()]
+    # get each team's average team scores, sort it with the maximum first, and turn it into a list
     avg_scores = {k: get_avg_team_score(data[k]) for k in standings}
     avg_scores = [k for k, v in sorted(avg_scores.items(), key=lambda item: item[1], reverse=True)]
 
+    # make the alliance list
     alliances = []
 
-    if len(standings) >= 12:
+    # if we have more than 8 teams (we can't do the minimum selection without at least 8 teams)...
+    if len(standings) >= 8:
+        # make the four alliances
         for i in range(0, 4):
-            # captain
+            # captain (highest remaining in the ranks)
             alliance = [int(standings[0])]
             avg_scores.remove(standings[0])
             standings.remove(standings[0])
-            # first pick
+            # first pick (highest remaining in the average scores)
             alliance.append(int(avg_scores[0]))
             standings.remove(avg_scores[0])
             avg_scores.remove(avg_scores[0])
-
+    # if we have more than 15 teams, add the second pick to each alliance
     if len(standings) >= 15:
         for alliance in alliances:
             # second pick if needed
@@ -270,30 +282,41 @@ def predict_alliance_selection(standings: dict, data: dict):
             standings.remove(avg_scores[0])
             avg_scores.remove(avg_scores[0])
 
+    # return the completed alliances
     return alliances
 
 
+# gets the team numbers sorted by average score
 def sorted_by_avg_score(team_nums: list, data: dict):
     avg_scores = {k: get_avg_team_score(data[k]) for k in team_nums}
     return [k for k, v in sorted(avg_scores.items(), key=lambda item: item[1], reverse=True)]
 
 
+# predict the elimination matches
 def predict_elim_matches(alliances: list, data: dict):
+    # init winners, match data lists
     winners = []
     match_data = []
 
+    # if we don't have four alliances, return None
     if len(alliances) != 4:
         return None
 
+    # for the three best of three matches...
     for best_of_three in range(3):
+        # red alliance is the 1st or 2nd seed, or the first match's winner if in finals
         red_alliance = alliances[0] if best_of_three == 0 else alliances[1] if best_of_three == 1 else winners[0]
+        # blue alliance is the 4th or 3rd seed, or the second match's winner if in finals
         blue_alliance = alliances[3] if best_of_three == 0 else alliances[2] if best_of_three == 1 else winners[1]
+        # get the red and blue alliances sorted by average score
         red_alliance = sorted_by_avg_score(red_alliance, data)
         blue_alliance = sorted_by_avg_score(blue_alliance, data)
 
+        # how many wins each alliance has
         red_wins = 0
         blue_wins = 0
 
+        # simulate the match
         red_score, blue_score = sim_match(match={
             "red": [
                 red_alliance[0], red_alliance[1]
@@ -303,6 +326,7 @@ def predict_elim_matches(alliances: list, data: dict):
             ]
         }, data=data)
 
+        # add this match to the match data (for later pushing to the sheet)
         match_data.append([
             str(alliances.index(red_alliance) + 1),
             red_alliance[0], red_alliance[1], red_score,
@@ -311,9 +335,11 @@ def predict_elim_matches(alliances: list, data: dict):
             "red" if red_score > blue_score else "blue" if blue_score > red_score else "tie"
         ])
 
+        # add 1 to red or blue wins depending on the score
         red_wins += 1 if red_score > blue_score else 0
         blue_wins += 1 if blue_score > blue_score else 0
 
+        # simulate the second match, go through the same process
         red_score, blue_score = sim_match(match={
             "red": [
                 red_alliance[0], red_alliance[2]
@@ -334,9 +360,13 @@ def predict_elim_matches(alliances: list, data: dict):
         red_wins += 1 if red_score > blue_score else 0
         blue_wins += 1 if blue_score > blue_score else 0
 
-        repetitions = 0
+        # if red or blue has two wins, add a blank list to match data (things wouldn't line up in the sheet)
         if red_wins < 2 or blue_wins < 2:
             match_data.append([])
+
+        # if we are indecisive from the first two matches, run up to 5 matches until we have an answer.
+        # (limit of 5 just in case we have some weird ties or whatever and the loop becomes infinite)
+        repetitions = 0
         while red_wins < 2 or blue_wins < 2 and repetitions < 5:
             red_score, blue_score = sim_match(match={
                 "red": [
@@ -360,11 +390,13 @@ def predict_elim_matches(alliances: list, data: dict):
 
             repetitions += 1
 
+        # append the red or blue alliance to winners depending on who won
         if red_wins > blue_wins:
             winners.append(red_alliance)
         else:
             winners.append(blue_alliance)
 
+    # return the match data
     return match_data
 
 
