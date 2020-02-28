@@ -379,7 +379,7 @@ def predict_elim_matches(alliances: list, data: dict):
         blue_wins += 1 if blue_score > red_score else 0
 
         # if red or blue has two wins, add a blank list to match data (things wouldn't line up in the sheet)
-        if red_wins < 2 or blue_wins < 2:
+        if red_wins >= 2 or blue_wins >= 2:
             match_data.append([])
 
         # if we are indecisive from the first two matches, run up to 5 matches until we have an answer.
