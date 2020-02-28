@@ -81,6 +81,8 @@ def get_score(match: dict): # TODO: add penalty stuff here
 
 
 def get_avg_team_score(team: dict):
+    print("got here")
+    print(team)
     total = 0
 
     # if we don't have any data on that team...
@@ -200,7 +202,6 @@ def sim_match(match: dict, data: dict):
     avg_red_b = get_avg_team_score(data[str(match["red"][1])])
     avg_blue_a = get_avg_team_score(data[str(match["blue"][0])])
     avg_blue_b = get_avg_team_score(data[str(match["blue"][1])])
-    print("got here")
 
     if None in [avg_blue_a, avg_red_a, avg_blue_b, avg_red_b]:
         return None, None
