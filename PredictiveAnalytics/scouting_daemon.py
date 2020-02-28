@@ -1,5 +1,5 @@
 from SheetHandler import *
-from \SheetsClient import *
+from SheetsClient import *
 from datetime import datetime
 from time import sleep
 import sys
