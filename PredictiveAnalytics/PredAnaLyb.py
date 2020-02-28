@@ -83,6 +83,9 @@ def get_score(match: dict): # TODO: add penalty stuff here
 def get_avg_team_score(team: dict):
     total = 0
 
+    # if we don't have any data on that team...
+    if len(team.keys()) == 0:
+        return None
     # if we only have one entry and that entry is a pre-scouting entry...
     if len(team.keys()) == 1 and team.keys() == ["0"]:
         # use that entry
@@ -198,6 +201,9 @@ def sim_match(match: dict, data: dict):
     avg_blue_a = get_avg_team_score(data[str(match["blue"][0])])
     avg_blue_b = get_avg_team_score(data[str(match["blue"][1])])
 
+    if None in [avg_blue_a, avg_red_a, avg_blue_b, avg_red_b]:
+        return None, None
+
     red_score = (avg_red_a + avg_red_b) / 2
     blue_score = (avg_blue_a + avg_blue_b) / 2
 
@@ -212,27 +218,27 @@ def predict_analyze_qual_rankings(data: dict, schedule: list):
     # for each match we don't have data on, simulate it and add it to the standings
     for match_num in skipped:
         red_score, blue_score = sim_match(match=schedule[match_num - 1], data=data)
+        if red_score and blue_score:
+            if red_score > blue_score:
+                standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
+                standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(2)
+                standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(0)
+                standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(0)
+            elif blue_score > red_score:
+                standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(0)
+                standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(0)
+                standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(2)
+                standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(2)
+            else:
+                standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(1)
+                standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(1)
+                standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(1)
+                standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(1)
 
-        if red_score > blue_score:
-            standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(2)
-            standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(2)
-            standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(0)
-            standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(0)
-        elif blue_score > red_score:
-            standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(0)
-            standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(0)
-            standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(2)
-            standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(2)
-        else:
-            standings[str(schedule[match_num - 1]["red"][0])]["RP"].append(1)
-            standings[str(schedule[match_num - 1]["red"][1])]["RP"].append(1)
-            standings[str(schedule[match_num - 1]["blue"][0])]["RP"].append(1)
-            standings[str(schedule[match_num - 1]["blue"][1])]["RP"].append(1)
-
-        standings[str(schedule[match_num - 1]["red"][0])]["TBP"].append(min(red_score, blue_score))
-        standings[str(schedule[match_num - 1]["red"][1])]["TBP"].append(min(red_score, blue_score))
-        standings[str(schedule[match_num - 1]["blue"][0])]["TBP"].append(min(red_score, blue_score))
-        standings[str(schedule[match_num - 1]["blue"][1])]["TBP"].append(min(red_score, blue_score))
+            standings[str(schedule[match_num - 1]["red"][0])]["TBP"].append(min(red_score, blue_score))
+            standings[str(schedule[match_num - 1]["red"][1])]["TBP"].append(min(red_score, blue_score))
+            standings[str(schedule[match_num - 1]["blue"][0])]["TBP"].append(min(red_score, blue_score))
+            standings[str(schedule[match_num - 1]["blue"][1])]["TBP"].append(min(red_score, blue_score))
 
     # return the updated standings
     return standings
