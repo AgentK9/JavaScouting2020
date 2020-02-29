@@ -87,7 +87,7 @@ def get_avg_team_score(team: dict):
     if len(team.keys()) == 0:
         return None
     # if we only have one entry and that entry is a pre-scouting entry...
-    if len(team.keys()) == 1 and team.keys() == ["0"]:
+    if len(team.keys()) == 1 and "0" in team.keys():
         # use that entry
         return get_score_from_complex(team["0"])
     # otherwise (we have match data)
